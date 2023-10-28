@@ -41,9 +41,9 @@ public class ParkingSpotController {
 		this.parkingSpotService = parkingSpotService;
 	}
 	
-	
+
 	@PostMapping
-	public ResponseEntity<Object> saveParkingSpot(@RequestBody @Valid ParkingSpotDTO parkingSpotDTO){
+	public ResponseEntity saveParkingSpot(@RequestBody @Valid ParkingSpotDTO parkingSpotDTO){
 		
 		if(parkingSpotService.existsByLicensePlateCar(parkingSpotDTO.getLicensePlateCar())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: License Plate Car is already in use!");
@@ -68,7 +68,7 @@ public class ParkingSpotController {
     }
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Object> getOne(@PathVariable(value = "id") UUID id){
+	public ResponseEntity getOne(@PathVariable(value = "id") UUID id){
 		Optional<ParkingSpotModel> parkingModel = parkingSpotService.getOne(id);
 				if(!parkingModel.isPresent()) {
 					return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found");
@@ -77,7 +77,7 @@ public class ParkingSpotController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Object> update(@PathVariable(value = "id") UUID id, @RequestBody @Valid ParkingSpotDTO parkingSpotDTO){
+	public ResponseEntity update(@PathVariable(value = "id") UUID id, @RequestBody @Valid ParkingSpotDTO parkingSpotDTO){
 		Optional<ParkingSpotModel> parkingSpot = parkingSpotService.getOne(id);
 		if(!parkingSpot.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found");
@@ -90,7 +90,7 @@ public class ParkingSpotController {
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Object> delete(@PathVariable(value = "id") UUID id){
+	public ResponseEntity delete(@PathVariable(value = "id") UUID id){
 		Optional<ParkingSpotModel> parkingModel = parkingSpotService.getOne(id);
 		if(parkingModel.isEmpty()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found");
