@@ -28,8 +28,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers(HttpMethod.GET,"/parking-spot").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/parking-spot").permitAll()
                         .requestMatchers(HttpMethod.POST,"/parking-spot").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/parking-spot").hasAnyRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/parking-spot").hasAnyRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf.disable())
@@ -55,14 +57,18 @@ public class SecurityConfig {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
-                .username("william")
-                .password("123456")
-                .roles("ADMIN")
+    public UserDetailsService users() {
+        UserDetails user = User.builder()
+                .username("user")
+                .password("{bcrypt}$2a$12$GOxloHD64oWTMiyqtX2EcuJxRIKeLyKW1Rn61nTwDlBqCSKt9WGUW")
+                .roles("USER")
                 .build();
-
-        return new InMemoryUserDetailsManager(userDetails);
+        UserDetails admin = User.builder()
+                .username("admin")
+                .password("{bcrypt}$2a$12$u7dJMtLnqE7berXFbQHUKuXvzLAFkvDvp4BlGZeqdX95GZfAHXEfq")
+                .roles("USER", "ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(user, admin);
     }
 
     @Bean
